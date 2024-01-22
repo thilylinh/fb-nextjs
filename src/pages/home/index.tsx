@@ -85,8 +85,8 @@ export default function Home(props: any) {
           <React.Fragment key={index}>
             <h1>{group.groupName}</h1>
             <div className="news-list">
-              {group.detail.map((item: any) => (
-                <div className="news-item">
+              {group.detail.map((item: any, idx: number) => (
+                <div className="news-item" key={idx}>
                   <Image
                     src={item.avatarLink}
                     alt={item.name}
