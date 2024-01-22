@@ -19,7 +19,7 @@ export default function Page(data: any) {
       </Head>
       <main>
         <Script src="/qcscript.js" />
-        <div className="container-flu">
+        <div className="container-flu details">
           <div id="M932897ScriptRootC1569683"></div>
           <script
             src="https://jsc.mgid.com/l/o/lovenews.sportsandtravelonline.com.1569683.js"
