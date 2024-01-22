@@ -1,33 +1,15 @@
 import { Suspense } from "react";
-import { GetServerSideProps, Metadata } from "next";
+import { GetServerSideProps } from "next";
 import Script from "next/script";
 import axios from "axios";
 import Head from "next/head";
-// export const runtime = "edge";
-// export async function generateMetadata({ params }: Props): Promise<Metadata> {
-//   const slug = params.slug;
-//   const id = slug.slice(slug.lastIndexOf("-") + 1);
-//   const { data: article } = await fetch(
-//     "https://api.sportsandtravelonline.com/News/news-detail?id=" + id
-//   ).then((res) => res.json());
-
-//   return {
-//     title: article.name,
-//     metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
-//     openGraph: {
-//       images: [article.avatarLink],
-//     },
-//   };
-// }
 const formatDate = (str: string) => {
   const date = new Date(str);
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
 export default function Page(data: any) {
-  console.log("data", data);
   const article = data.data;
-  console.log("111", article)
   return (
     <>
       <Head>
@@ -36,7 +18,7 @@ export default function Page(data: any) {
         <meta property="og:title" content={article.name} />
       </Head>
       <main>
-        {/* <Script src="/qcscript.js" /> */}
+        <Script src="/qcscript.js" />
         <div className="container-flu">
           <div id="M932897ScriptRootC1569683"></div>
           <script
