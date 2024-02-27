@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import Script from "next/script";
 import axios from "axios";
@@ -10,6 +10,24 @@ const formatDate = (str: string) => {
 
 export default function Page(data: any) {
   const article = data.data;
+  useEffect(() => {
+    const iframe = document.querySelector(".content iframe");
+
+    const handleIframeLoad = () => {
+      if (iframe) {
+        iframe.style.height = '520px'
+        iframe.style.width = '100%'
+      }
+    };
+
+    if (iframe) {
+      iframe.addEventListener("load", handleIframeLoad);
+
+      return () => {
+        iframe.removeEventListener("load", handleIframeLoad);
+      };
+    }
+  }, []);
   return (
     <>
       <Head>
@@ -47,20 +65,36 @@ export default function Page(data: any) {
   );
 }
 
+// Memory cache object
+const cache = new Map();
+
 export const getServerSideProps: GetServerSideProps<any> = async ({
   params,
 }) => {
   try {
+    const slug = params?.slug;
+    // Check cache first
+    if (cache.has(slug)) {
+      return {
+        props: { data: cache.get(slug) },
+      };
+    }
+    // If not in cache, fetch from API
     const response = await axios.get(
-      `${process.env.APP_API}/News/news-detail?id=${params?.slug?.slice(params?.slug?.lastIndexOf("-") + 1) }`
+      `${process.env.APP_API}/News/news-detail?id=${params?.slug?.slice(
+        params?.slug?.lastIndexOf("-") + 1
+      )}`
     );
+    // Store in cache for future use (expire in 5 minutes for example)
+    cache.set(slug, response.data.data);
+    setTimeout(() => cache.delete(slug), 5 * 60 * 1000); // Expire after 5 minutes
     return {
       props: { data: response.data.data },
     };
   } catch (error) {
     console.error("Error fetching data:", error);
     return {
-      props: { data: [] as any[] }, // Sử dụng any type cho data
+      props: { data: [] as any[] }, // Use any type for data
     };
   }
 };
